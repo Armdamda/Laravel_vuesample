@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+.navbar {
+  display: inline-block;
+  background-color: gray;
+  width: 100%;
+}
+
+.navbar ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.sidebar {
+  width: 20%;
+  height: 500px;
+  background-color: beige;
+  display: inline-block;
+}
+
+.content {
+  width: 80%;
+  height: 500px;
+  display: inline-block;
+  background-color: bisque;
+}

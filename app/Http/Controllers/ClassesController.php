@@ -104,7 +104,7 @@ class ClassesController extends Controller
             'message'=>'Class not found!'
         ],400);
     }
-    //function for for get data from Dynamic input fields:
+  
     public function  subjectTeachers(string $id) 
     {
         $teachers = Subject::find($id)->teachers()->get();

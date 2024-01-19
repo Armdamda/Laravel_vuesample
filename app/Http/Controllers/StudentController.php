@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
+use Brick\Math\BigInteger;
 use Illuminate\Http\Request;
+use App\Models\Classes;
 
 class StudentController extends Controller
 {
@@ -11,43 +14,82 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = Student::with('classroom')->get();
+        return  response()->json($students);
+    }
+    public function getClassroom()
+    {
+        $classrooms = Classes::all();                     
+        return response()->json($classrooms);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        dd($request->all());
-        info('save');
-
-        return response([
-            'message' => 'success',
+        $students = new Student([
+            'name'=>$request->name,
+            'gender'=>$request->gender,
+            'class_id'=>$request->classroom
         ]);
+        // $request->validate([
+        //     'name'=> 'required|max:255',
+        //     'gender'=>'required|max:50'
+
+        // ]);
+        $students->save();
+        return response()->json('Students created!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        $students = Student::with('classroom')->find($id);
+        
+        //return response()->json($students);
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail data students',
+            'data' => $students
+        ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
-    {
-        //
+    { 
+        $students = Student::with('classroom')->find($id);
+        if ($students) {
+            // $request->validate([
+            //     'name'=> 'required|max:255',
+            //     'gender'=>'required|max:50',
+                
+            // ]);
+            $students->update([
+                'name'=>$request->name,
+                'gender'=>$request->gender
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Student updated !',
+                'data' => $students
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'student not found'
+        ], 404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Student $students ,string $id)
     {
-        //
+        $students = Student::find($id);
+        if ($students) {
+            $students->classrooms->detach();
+            $students->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'students deleted'
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'students not found'
+        ], 404);
     }
 }

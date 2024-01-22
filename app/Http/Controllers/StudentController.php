@@ -23,7 +23,7 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $students = Student::create($request->validated());
+        // $students = Student::create($request->validated());
         $students = new Student([
             'name'=>$request->name,
             'gender'=>$request->gender,

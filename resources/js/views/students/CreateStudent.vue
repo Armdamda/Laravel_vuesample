@@ -83,19 +83,21 @@
 
   const student =reactive({
     name: '',
-      gender: '',
-      classroom: '',
+    gender: '',
+    classroom: '',
   })
 
   onMounted(()=>{
+    
     getClassroom()
+
   })
   //getClassroom
   const getClassroom = async () =>{
     let response = await axios.get(`/api/classes`)
-    classrooms.value = response.data.data.classrooms
+    classrooms.value = response.data
   }
-
+  //post data to model 
   const storeStudent = async (student) =>{
      errors.value = '  '
      try {

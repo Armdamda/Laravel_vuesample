@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <form @submit.prevent="storeClassroom">
+    <form @submit.prevent="storeStudent">
         <div class="mb-4">
             <label  class="block text-gray-700 font-medium mb-2">Name</label>
             <input type="text" v-model="student.name" placeholder="Username" class="border text-base font-medium border-gray-400 p-2 w-full rounded-lg text-gray-600 focus:outline-none focus:border-gray-400" required>
@@ -78,8 +78,8 @@
   import { onMounted } from 'vue'
  
   const errors = ref(' ')
-  const router = useRouter()
   const classrooms = ref([])
+  const router = useRouter()
 
   const student =reactive({
     name: '',
@@ -88,14 +88,15 @@
   })
 
   onMounted(()=>{
-    getClassroom
+    getClassroom()
   })
   //getClassroom
   const getClassroom = async () =>{
-    let response = await axios.get('/api/classes')
-    classrooms.value = response.data
+    let response = await axios.get(`/api/classes`)
+    classrooms.value = response.data.data.classrooms
   }
-  const storeClassroom = async (student) =>{
+
+  const storeStudent = async (student) =>{
      errors.value = '  '
      try {
       await axios.post(`/api/students`,student)

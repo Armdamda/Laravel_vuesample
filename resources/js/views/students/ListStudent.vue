@@ -58,7 +58,7 @@
                                       class="mr-3 text-sm bg-gray-400 hover:bg-gray-500 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">
                                       <RouterLink :to='{name:"student.show",params:{id: student.id}}'>View</RouterLink>
                                   </button>
-                                  <button  @click="studentDelete(student.id,index)" 
+                                  <button  @click="deleteStudent(student.id,index)" 
                                     class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">
                                       Delete                            
                                   </button>
@@ -97,24 +97,40 @@
   import axios from 'axios';
   import {onMounted } from 'vue';
   import {ref,reactive} from 'vue';
-
-  const errors = ref('  ')
+import { useRouter } from 'vue-router';
   // const student = reactive({
   //   classroom:' '
   // })
   const classrooms = ref([])
   const students = ref([])
+  const router = useRouter()
+  const errors = ref(' ')
+
   onMounted(()=>{
-    getStudent,
-    getClassroom
+    getStudent()
+    
   })
-  const getStudent = async (id)=>{
-    let response =await axios.get(`/api/students/${id}`)
-    students.value = response.data.data.students
+  const getStudent = async ()=>{
+    let response =await axios.get(`/api/students`)
+    students.value = response.data
   }
   const getClassroom = async ()=>{
     let response = await axios.get(`/api/classes`)
-    classrooms.value = response.data.data
+    classrooms.value = response.data
+  }
+
+  const deleteStudent = async (id)=>{
+    errors.value='   '
+    try {
+      await axios.delete(`/api/students/${id}`)
+      await router.push({ name: 'students'})
+    } catch (error) {
+      if(errors.response.status === 422){
+        for(const key in e.response.data.errors){
+          errors.value = e.response.data.errors
+        }
+      }
+    }
   }
 
 </script>

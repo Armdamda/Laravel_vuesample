@@ -9,11 +9,9 @@ use App\Models\Classes;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
+        //$students = Student::all();
         $students = Student::with('classroom')->get();
         return  response()->json($students);
     }
@@ -25,16 +23,12 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        $students = Student::create($request->validated());
         $students = new Student([
             'name'=>$request->name,
             'gender'=>$request->gender,
             'class_id'=>$request->classroom
         ]);
-        // $request->validate([
-        //     'name'=> 'required|max:255',
-        //     'gender'=>'required|max:50'
-
-        // ]);
         $students->save();
         return response()->json('Students created!');
     }
@@ -55,11 +49,6 @@ class StudentController extends Controller
     { 
         $students = Student::with('classroom')->find($id);
         if ($students) {
-            // $request->validate([
-            //     'name'=> 'required|max:255',
-            //     'gender'=>'required|max:50',
-                
-            // ]);
             $students->update([
                 'name'=>$request->name,
                 'gender'=>$request->gender

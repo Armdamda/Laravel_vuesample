@@ -93,59 +93,28 @@
     </div>
   </div>
 </template>
+<script setup>
+  import axios from 'axios';
+  import {onMounted } from 'vue';
+  import {ref,reactive} from 'vue';
 
-<script >
-import { RouterLink } from 'vue-router';
-import axios from 'axios';
+  const errors = ref('  ')
+  // const student = reactive({
+  //   classroom:' '
+  // })
+  const classrooms = ref([])
+  const students = ref([])
+  onMounted(()=>{
+    getStudent,
+    getClassroom
+  })
+  const getStudent = async (id)=>{
+    let response =await axios.get(`/api/students/${id}`)
+    students.value = response.data.data.students
+  }
+  const getClassroom = async ()=>{
+    let response = await axios.get(`/api/classes`)
+    classrooms.value = response.data.data
+  }
 
-export default {
-    data() {
-        return {
-          student:{
-            classrooms:[]
-          },
-            students: [],
-           
-        }
-    },
-    mounted() { 
-        this.fetchPosts()
-        // this.getClass()
-    },
-    methods: {
-        fetchPosts() {
-            axios
-              .get('/api/students')
-              .then(response => {
-                this.students = response.data
-                this.student.classrooms = response.data.classroom
-              })
-              .catch(error => console.log(error))
-              .finally(()=>this.loading =false)
-        },
-        getClass()
-        {
-            axios
-              .get(`/api/classes/${this.$route.params.id}`)
-              .then(res => {
-                this.classrooms = res.data
-              })
-              .catch(error => console.log(error))
-              .finally(()=>this.loading = false)
-        },
-
-        studentDelete(id, index) {
-          axios
-            .delete('/api/students/'+id)
-            .then(() => {
-              this.students.data.splice(index,1);
-            })
-            .catch((error) => {
-              console.log(error);
-            })
-            .finally(()=>this.loading = false)
-        }
-        
-    } ,   
-}   
 </script>

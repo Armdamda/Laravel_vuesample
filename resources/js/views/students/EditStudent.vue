@@ -1,7 +1,7 @@
 <template>
     <div class="bg-gray-50 px-12 py-2 rounded-md  m-auto w-[70%]">
       <h2 class="text-2xl font-medium mb-4">Update Student</h2>
-      <form @submit.prevent="updateStudent">
+      <form @submit.prevent="updatedStudent">
           <div class="mb-4">
               <label  class="block text-gray-700 font-medium mb-2">Name</label>
               <input type="text" v-model="student.name" placeholder="Username" class="border text-base font-medium border-gray-400 p-2 w-full rounded-lg text-gray-600 focus:outline-none focus:border-gray-400" required>
@@ -60,59 +60,65 @@
   </div>
   
 </template> 
-<script>
-  
-  export default {
-    data(){
-      return{
-        student:{
-            name: '',
-            gender: '',
-            classroom: '',
-        },
-        students:[],
-        classrooms:[]
-      }
-    },
-    mounted(){ 
-       this.getClass()
-       this.getStudent()
-    },
-  
-    methods:{
-  async   getClass(){
-         await axios
-              .get(`/api/classes`)
-              .then((res)=>{
-                this.classrooms = res.data
-              })
-              .catch(error=>console.log(error))
-              .finally(()=>this.loading= false)
-      },
-      
- async   getStudent(){
-     await axios
-            .get(`/api/students/${this.$route.params.id}`)
-            .then((res) => {
-                this.student.name= res.data.data.name
-                this.student.gender= res.data.data.gender
-                this.student.classroom = res.data.data.classroom.id 
-            })
-            .catch((error) => {
-                console.log(error.response.data);
-            })
-            .finally(()=>this.loading=false)
-        },
-     
-        updateStudent(){ 
-          axios 
-            .put(`/api/students/${this.$route.params.id}`,this.student)
-            .then((res)=>{
-                this.$router.push({name: 'students'})
-            })
-            .catch(error=>console.log(error))
-            .finally(()=>this.loading= false)
+  <script setup>
+    import axios from 'axios';
+    import { ref, reactive} from 'vue'
+    import { onMounted } from 'vue';
+    import { useRouter } from 'vue-router';
+    
+    const errors = ref('')
+    const router = useRouter()
+    const students = ref([])
+    const classrooms = ref([])
+  	const student= reactive({
+        name: ' ',
+        gender:' ',
+        classroom: ' '
+    })
+    const props = defineProps({
+    id: {
+        required: true,
+        type: String
+    }
+})
+    onMounted(()=>{
+        getClassroom()
+        getStudent()
+    })
+    const getClassroom = async () =>{
+        let response = await axios.get(`/api/classes`)
+        classrooms.value = response.data
+    }
+
+    const getStudent = async () =>  {
+        let res =await axios.get(`/api/student/${id}`)
+            student.name = res.data.data.name
+            student.gender = res.data.data.gender
+            student.classroom = res.data.data.classroom.id
+    } 
+
+    const updatedStudent = async (id) =>{
+        errors.value = ' '
+        try {
+            await axios.patch(`/api/students/${id}`,student)
+            await router.push({name:'students'})
+        } catch (e) {
+            if(e.response.status === 422){
+                for(const key in e.response.data.errors){
+                     errors.value = e.response.data.errors
+                }
+            }
         }
-    },
-  }
-  </script>
+    }
+
+   
+ 
+onMounted(() => getCompany(props.id))
+ 
+const saveCompany = async () => {
+    await updateCompany(props.id)
+}
+
+
+
+</script>

@@ -65,7 +65,7 @@ class ClassesController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // $grade = Classes::with('subjects')->find($id)->teachers()->get();
+        // $grade = Classes::find($id)->teachers()->get();
          $grade = Classes::with('subjects')->find($id);
         if ($grade) {
             // $request->validate([

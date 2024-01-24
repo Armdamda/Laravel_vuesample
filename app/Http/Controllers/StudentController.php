@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use Brick\Math\BigInteger;
 use Illuminate\Http\Request;
 use App\Models\Classes;
-
 class StudentController extends Controller
 {
     public function index()
@@ -23,7 +21,7 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        // $students = Student::create($request->validated());
+        //$students = Student::create($request->validated());
         $students = new Student([
             'name'=>$request->name,
             'gender'=>$request->gender,

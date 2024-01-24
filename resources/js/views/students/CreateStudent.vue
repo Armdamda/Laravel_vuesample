@@ -72,7 +72,7 @@
 </template> 
 
 <script setup>
- import axios from 'axios';
+  import axios from 'axios';
   import {ref, reactive }  from  'vue'
   import { useRouter} from 'vue-router'
   import { onMounted } from 'vue'
@@ -88,9 +88,7 @@
   })
 
   onMounted(()=>{
-    
     getClassroom()
-
   })
   //getClassroom
   const getClassroom = async () =>{
@@ -112,6 +110,5 @@
       }
      }
   }
-
 
 </script>

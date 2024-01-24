@@ -26,7 +26,7 @@ class SubjectController extends Controller
             'name'=>$request->name
         ]);
         $subjects->save();
-        //$subjects->teachers()->attach($request->teachers);
+        $subjects->teachers()->attach($request->teachers);
         return response()->json('Subject created!');
     }
 

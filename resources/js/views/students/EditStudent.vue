@@ -91,16 +91,16 @@
     }
 
     const getStudent = async () =>  {
-        let res =await axios.get(`/api/student/${id}`)
-            student.name = res.data.data.name
-            student.gender = res.data.data.gender
-            student.classroom = res.data.data.classroom.id
+        let res =await axios.get(`/api/student/${props.id}`)
+            student.name = res.data.name
+            student.gender = res.data.gender
+            student.classroom = res.data.classroom.id
     } 
 
-    const updatedStudent = async (id) =>{
+    const updatedStudent = async () =>{
         errors.value = ' '
         try {
-            await axios.patch(`/api/students/${id}`,student)
+            await axios.patch(`/api/students/${props.id}`,student)
             await router.push({name:'students'})
         } catch (e) {
             if(e.response.status === 422){
@@ -110,15 +110,4 @@
             }
         }
     }
-
-   
- 
-onMounted(() => getCompany(props.id))
- 
-const saveCompany = async () => {
-    await updateCompany(props.id)
-}
-
-
-
 </script>

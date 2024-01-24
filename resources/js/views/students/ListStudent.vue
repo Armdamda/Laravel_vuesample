@@ -114,10 +114,11 @@ import { useRouter } from 'vue-router';
     let response =await axios.get(`/api/students`)
     students.value = response.data
   }
-  const getClassroom = async ()=>{
-    let response = await axios.get(`/api/classes`)
-    classrooms.value = response.data
-  }
+  
+  // const getClassroom = async ()=>{
+  //   let response = await axios.get(`/api/classes`)
+  //   classrooms.value = response.data
+  // }
 
   const deleteStudent = async (id)=>{
     errors.value='   '

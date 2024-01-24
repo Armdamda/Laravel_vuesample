@@ -22,6 +22,11 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //$students = Student::create($request->validated());
+        $request->validate([
+            'titnamele' => 'required|string|max:255',
+            'gender' => 'required',
+            'class_id' => 'required'
+        ]);
         $students = new Student([
             'name'=>$request->name,
             'gender'=>$request->gender,

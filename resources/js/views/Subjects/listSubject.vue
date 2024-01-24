@@ -33,7 +33,7 @@
                               </thead>
                      
                               <tbody  class="divide-y divide-gray-200 " >
-                                <tr  class="text-center"  v-for="(subjects,index) in subject" :key="index.id">                          
+                                <tr  class="text-center"  v-for="(subject,index) in subjects" :key="index.id">                          
                                   <td class="py-3 p-4">
                                     <div class="flex items-center h-5">
                                       <input id="hs-table-pagination-checkbox-1" type="checkbox" class="border-gray-200 rounded text-blue-600 focus:ring-blue-500">
@@ -41,19 +41,19 @@
                                     </div>
                                   </td>
                                  
-                                  <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ subjects.name }}</td>   
-                                  <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ subjects.created_at }}</td>
-                                  <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ subjects.updated_at }}</td>           
+                                  <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ subject.name }}</td>   
+                                  <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ subject.created_at }}</td>
+                                  <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ subject.updated_at }}</td>           
                                   <td class="px-4 py-4  text-sm">
                                       <button 
                                           class="mr-3 text-sm bg-gray-400 hover:bg-gray-500 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">
-                                          <RouterLink :to='{name:"subjects.edit",params:{id:subjects.id}}'>Edit</RouterLink>                                       
+                                          <RouterLink :to='{name:"subjects.edit",params:{id:subject.id}}'>Edit</RouterLink>                                       
                                       </button>
                                       <button 
                                           class="mr-3 text-sm bg-gray-400 hover:bg-gray-500 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">
-                                          <RouterLink :to='{name:"subjects.show",params:{id: subjects.id}}'>View</RouterLink>
+                                          <RouterLink :to='{name:"subjects.show",params:{id: subject.id}}'>View</RouterLink>
                                       </button>
-                                      <button  @click="deleteSubject(subjects.id,index)" 
+                                      <button  @click="deleteSubject(subject.id,index)" 
                                         class="text-sm bg-gray-500 hover:bg-gray-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">
                                           Delete                            
                                       </button>
@@ -88,50 +88,40 @@
         </div>
       </div>
 </template>
-    
-<script >
-import axios from 'axios'
 
-    export default {
-        data() {
-             return {
-                subject: [],
-                teachers:[]
-            }
-        },
-        mounted() { 
-            this.getSubject()
-            // this.getTeacher()
-        },
-        methods: {
+<script setup>
+import axios from 'axios';
+import {ref, reactive }  from  'vue'
+import { onMounted } from 'vue'
 
-          getTeacher(){
-              axios
-                    .get(`api/teachers`)
-                    .then((res)=>{
-                      this.teachers= res.data
-                    })
-                    .catch(error => console.log(error))
-                    .finally(()=> this.loading = false)
-          },
-            getSubject(){
-                  axios
-                    .get(`api/subjects`)
-                    .then(response => this.subject = response.data)
-                    .catch(error => console.log(error))
-                    .finally(()=> this.loading = false)
-            },
+ const subjects = ref([])
+ const teachers=ref([])
 
-            deleteSubject(id, index) {
-              axios
-                .delete('/api/subjects/'+id)
-                .then(() => {
-                  this.subject.data.splice(index,1);
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            }           
-        }   
-    }   
-    </script>
+ onMounted(() => {
+      getSubject()
+      getTeacher()
+ })
+ const  getSubject = async () => {
+    let res =  await axios.get(`/api/subjects`)
+    subjects.value = res.data
+ }
+
+ const  getTeacher = async ()=>{
+    let res =  await axios.get(`/api/teachers`)
+    teachers.value = res.data
+ }
+
+const deleteSubject =async(id, index) =>{
+            axios
+            .delete('/api/subjects/'+id)
+      .then(() => {
+         this.subjects.data.splice(index,1);
+     })
+    .catch((error) => {
+              console.log(error);
+    });
+}
+ </script>
+
+
+

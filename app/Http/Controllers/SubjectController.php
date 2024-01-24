@@ -22,8 +22,12 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
+      
         $subjects = new Subject([
             'name'=>$request->name
+        ]);
+        $request->validate([
+            'name'=>'require|string'
         ]);
         $subjects->save();
         $subjects->teachers()->attach($request->teachers);

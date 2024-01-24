@@ -22,15 +22,16 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //$students = Student::create($request->validated());
-        // $request->validate([
-        //     'titnamele' => 'required|string|max:255',
-        //     'gender' => 'required',
-        //     'class_id' => 'required'
-        // ]);
+    
         $students = new Student([
             'name'=>$request->name,
             'gender'=>$request->gender,
             'class_id'=>$request->classroom
+        ]);
+            $request->validate([
+            'name' => 'required|string|max:255',
+            'gender' => 'required',
+            'class_id' => 'required'
         ]);
         $students->save();
         return response()->json('Students created!');
@@ -55,6 +56,11 @@ class StudentController extends Controller
             $students->update([
                 'name'=>$request->name,
                 'gender'=>$request->gender
+            ]);
+            $request->validate([
+               ' name' => 'required|string|max:255',
+                 'gender' => 'required',
+                'class_id' => 'required'
             ]);
             return response()->json([
                 'success' => true,

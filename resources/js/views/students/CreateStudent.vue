@@ -3,13 +3,13 @@
   <div class=" bg-gray-50 px-12 py-3 m-auto rounded-md w-[70%]">
     <h2 class="text-2xl font-medium mb-4">New Student</h2>
 
-    <div v-if="errors">
+    <!-- <div v-if="errors">
         <div v-for="(v, k) in errors" :key="k" class="text-red-700 rounded font-bold mb-4 shadow-lg py-2 px-4 pr-0">
             <p v-for="error in v" :key="error" class="text-sm">
                 {{ error }}
             </p>
         </div>
-    </div>
+    </div> -->
 
     <form @submit.prevent="storeStudent">
         <div class="mb-4">
@@ -80,11 +80,11 @@
   const errors = ref(' ')
   const classrooms = ref([])
   const router = useRouter()
-
+ 
   const student =reactive({
-    name: '',
-    gender: '',
-    classroom: '',
+    name: ' ',
+    gender: ' ',
+    classroom: ' ',
   })
 
   onMounted(()=>{
@@ -96,7 +96,7 @@
     classrooms.value = response.data
   }
   //post data to model 
-  const storeStudent = async (student) =>{
+  const storeStudent = async () =>{
      errors.value = '  '
      try {
       await axios.post(`/api/students`,student)

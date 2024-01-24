@@ -92,81 +92,83 @@
     </div>
 </template>
   
-<script setup>
-    import axios from 'axios';
-    import {ref, reactive} from 'vue'
-    import { onMounted } from 'vue'
-    import { useRoute } from 'vue-router';
+<script >
+
+
+//     import axios from 'axios';
+//     import {ref, reactive} from 'vue'
+//     import { onMounted } from 'vue'
+//     import { useRoute } from 'vue-router';
   
-    const route= ref('')
-  const errors = ref(' ')
-  const teachers= ref([])
-  const subjects= ref([])
+//     const route= ref('')
+//   const errors = ref(' ')
+//   const teachers= ref([])
+//   const subjects= ref([])
 
-  onMounted(()=>{
-    getTeacher()
-    getSubject()
-  })
-  const getTeacher = async () =>{
-    let response = await axios.get(`/api/teachers`)
-    teachers.value = response.data
-  }
-  const getSubject = async (id) =>{
-    let response = await axios.get(`/api/subjects`)
-    subjects.value = response.data.data
-  }
+//   onMounted(()=>{
+//     getTeacher()
+//     getSubject()
+//   })
+//   const getTeacher = async () =>{
+//     let response = await axios.get(`/api/teachers`)
+//     teachers.value = response.data
+//   }
+//   const getSubject = async (id) =>{
+//     let response = await axios.get(`/api/subjects`)
+//     subjects.value = response.data.data
+//   }
 
-  const   teacherDelete = async (id, index) =>{
-  errors.value = ' '
-  try {
-    let response = await   axios.delete('/api/teachers/'+id)
-    teachers.value = response.data.splice(index,1);
-  } catch (error) {
-    if(error.response.status === 422)
-    {
-      for(let key in error.response.data){
-        errors.value = error.response.data.errors
-      }
-    }
-  } 
-}      
+//   const   teacherDelete = async (id, index) =>{
+//   errors.value = ' '
+//   try {
+//     let response = await   axios.delete('/api/teachers/'+id)
+//     teachers.value = response.data.splice(index,1);
+//   } catch (error) {
+//     if(error.response.status === 422)
+//     {
+//       for(let key in error.response.data){
+//         errors.value = error.response.data.errors
+//       }
+//     }
+//   } 
+// }      
 
-// export default {
-//       data() {
-//           return {
-//               teachers: [],
-//               subjects:[]
-//           }
-//       },
-//       mounted() { 
-//           this.getTeacher()
-//           this.getSubject()
-//       },
+export default {
+      data() {
+          return {
+              teachers: [],
+              subjects:[]
+          }
+      },
+      mounted() { 
+          this.getTeacher()
+          this.getSubject()
+      },
 
-//       methods: {
-//           getTeacher() {
-//             axios
-//                 .get(`/api/teachers`)
-//                 .then(response => {
-//                   this.teacher = response.data
-//                 })
-//                 .catch(error => console.log(error))
-//                 .finally(()=>this.loading =false)
-//           },
+      methods: {
+          getTeacher() {
+            axios
+                .get(`/api/teachers`)
+                .then(response => {
+                  this.teacher = response.data
+                })
+                .catch(error => console.log(error))
+                .finally(()=>this.loading =false)
+          },
 
-//           getSubject(){
-//             axios 
-//                 .get(`/api/subjects/${this.$route.params.id}`)
-//                 .then((res) => {
-//                   console.log(res.data.data.teachers)
-//                   this.teachers =  res.data.data.teachers
-//                 })
-//                 .catch(error => console.log(error))
-//                 .finally(()=>this.loading = false)
-//           },
+          getSubject(){
+            axios 
+                .get(`/api/subjects/${this.$route.params.id}`)
+                .then((res) => {
+                  console.log(res.data.data.teachers)
+                  this.teachers =  res.data.data.teachers
+                })
+                .catch(error => console.log(error))
+                .finally(()=>this.loading = false)
+          },
 
 
-//       } ,   
-//   }   
+      } ,   
+  }   
 
 </script>

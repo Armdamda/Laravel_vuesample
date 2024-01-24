@@ -60,6 +60,44 @@
 </template> 
 
 <script>
+  //   import axios from 'axios';
+  // import {ref, reactive }  from  'vue'
+  // import { useRouter} from 'vue-router'
+  // import { onMounted } from 'vue'
+  
+  // const error = ref(" ")
+  // const subjects = ref([])
+  // const router = useRouter()
+  // const teacher= reactive({
+  //   name:' ',
+  //   gender:' ',
+  //   subject:[]
+  // })
+
+  // onMounted(()=>{
+  //   getSubject()
+  // })
+
+  // const getSubject  =async ()=>{
+  //     let response = await axios.get(`/api/subjects`)
+  //     subjects.value = response.data
+  // }
+
+  // const addTeacher = async () =>{
+  //   error.value = "  "
+  //   try {
+  //     await axios.post(`/api/teachers`,teacher)
+  //     await router.push({name:'teachers'})
+  //   } 
+  //   catch (error) {
+  //     if(error.response.status === 422){
+  //       for(let key in error.response.data.error){
+  //         error.value = error.response.data.error
+  //       }
+  //     }
+  //   }
+  // }
+
   export default {
     data(){
       return{
@@ -98,5 +136,4 @@
       }
     },
   }
-  
   </script>

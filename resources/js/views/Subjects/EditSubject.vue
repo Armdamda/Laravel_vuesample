@@ -45,7 +45,7 @@ const errors = ref(" ")
         if(error.response.data.status === 422)
         {
           for(const key in errors.response.data){
-            errors.value = errors.response.data
+             errors.value = errors.response.data
           }
         }
       }
@@ -87,4 +87,4 @@ const errors = ref(" ")
   // }
 
 
-  </script>
+</script>

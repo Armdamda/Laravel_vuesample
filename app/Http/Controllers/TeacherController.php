@@ -18,6 +18,7 @@ class TeacherController extends Controller
         $subjects = Subject::all();
         return response()->json($subjects);
     }
+
     public function store(Request $request)
     {
         $teachers = new Teacher();
@@ -26,7 +27,6 @@ class TeacherController extends Controller
             'gender' => 'required'
         ]);
         $teachers->save();
-        //use attach 
         $teachers->subjects()->attach($request->subject);
         return response()->json([
             'success' => true,

@@ -92,6 +92,7 @@
       </div>
     </div>
   </div>
+
 </template>
 <script setup>
   import axios from 'axios';
@@ -108,6 +109,7 @@ import { useRouter } from 'vue-router';
     getStudent()
     getClassroom()
   })
+  
   const getStudent = async ()=>{
     let response =await axios.get(`/api/students`)
     students.value = response.data

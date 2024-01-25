@@ -96,7 +96,7 @@
 <script setup>
   import axios from 'axios';
   import {onMounted } from 'vue';
-  import {ref,reactive} from 'vue';
+  import {ref} from 'vue';
 import { useRouter } from 'vue-router';
 
   const classrooms = ref([])

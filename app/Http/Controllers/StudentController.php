@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\Classes;
+
 class StudentController extends Controller
 {
     public function index()
@@ -15,7 +16,7 @@ class StudentController extends Controller
     }
     public function getClassroom()
     {
-        $classrooms = Classes::all();                     
+        $classrooms = Classes::all();
         return response()->json($classrooms);
     }
 
@@ -26,10 +27,10 @@ class StudentController extends Controller
             'gender' => 'required',
         ]);
         $students = new Student([
-            'name'=>$request->name,
-            'gender'=>$request->gender,
-            'class_id'=>$request->classroom
-        ]);    
+            'name' => $request->name,
+            'gender' => $request->gender,
+            'class_id' => $request->classroom
+        ]);
         $students->save();
         return response()->json('Students created!');
     }
@@ -37,7 +38,7 @@ class StudentController extends Controller
     public function show(string $id)
     {
         $students = Student::with('classroom')->find($id);
-        
+
         //return response()->json($students);
         return response()->json([
             'success' => true,
@@ -47,13 +48,13 @@ class StudentController extends Controller
     }
 
     public function update(Request $request,  $id)
-    { 
+    {
         $students = Student::with('classroom')->find($id);
         if ($students) {
             $students->update([
-                'name'=>$request->name,
-                'gender'=>$request->gender,
-                'class_id'=>$request->classroom,
+                'name' => $request->name,
+                'gender' => $request->gender,
+                'class_id' => $request->classroom,
             ]);
             return response()->json([
                 'success' => true,
@@ -67,7 +68,7 @@ class StudentController extends Controller
         ], 404);
     }
 
-    public function destroy(Student $students , $id)
+    public function destroy(Student $students, $id)
     {
         $students = Student::find($id);
         if ($students) {

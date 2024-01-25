@@ -2,7 +2,7 @@
 
     <div class=" bg-gray-50 px-12 py-3 rounded-md m-auto w-[70%]">
       <h2 class="text-2xl font-medium mb-4">New Teacher</h2>
-      <form @submit.prevent="addTeacher">
+      <form @submit.prevent="createTeacher">
           <div class="mb-4">
               <label  class="block text-gray-700 font-medium mb-2">Name</label>
               <input type="text" v-model="teacher.name" placeholder="Username" class="border text-base font-medium border-gray-400 p-2 w-full rounded-lg text-gray-600 focus:outline-none focus:border-gray-400" required>
@@ -59,80 +59,79 @@
   </div>
 </template> 
 
-<script>
-  export default {
-    data(){
-      return{
-        teacher:{
-          'name': '  ',
-          'gender': '  ',
-          subject: [],
-        },
-        subjects:[]
-      }
-    },
-    mounted(){ 
-      this.getSubject()
-    },
+<script setup>
+   import axios from 'axios';
+  import {ref, reactive }  from  'vue'
+  import { useRouter} from 'vue-router'
+  import { onMounted } from 'vue'
   
-    methods:{
-      getSubject(){
-            axios
-            .get('/api/subjects')
-            .then((res) => {
-              this.subjects = res.data
-            })
-            .catch(error => console.log(error))
-            .finally(()=>this.loading = false)
-      },
-      
-      addTeacher(){
-          axios 
-            .post(`/api/teachers`,this.teacher)
-            .then((res)=>{
-              console.log(res.data)
-              this.$router.push({name: 'teachers'})
-            })
-            .catch(error=>console.log(error))
-            .finally(()=>this.loading= false)
+  const error = ref(" ")
+  const subjects = ref([])
+  const router = useRouter()
+  const teacher= reactive({
+    name:' ',
+    gender:' ',
+    subject:[]
+  })
+
+  onMounted(()=>{
+    getSubject()
+  })
+
+  const getSubject  =async ()=>{
+      let response = await axios.get(`/api/subjects`)
+      subjects.value = response.data
+  }
+
+  const createTeacher = async () =>{
+    error.value = "  "
+    try {
+      await axios.post(`/api/teachers`,teacher)
+      await router.push({name:'teachers'})
+    } 
+    catch (error) {
+      if(error.response.status === 422){
+        for(let key in error.response.data.error){
+          error.value = error.response.data.error
+        }
       }
     }
   }
-
-  //   import axios from 'axios';
-  // import {ref, reactive }  from  'vue'
-  // import { useRouter} from 'vue-router'
-  // import { onMounted } from 'vue'
+  // export default {
+  //   data(){
+  //     return{
+  //       teacher:{
+  //         'name': '  ',
+  //         'gender': '  ',
+  //         subject: [],
+  //       },
+  //       subjects:[]
+  //     }
+  //   },
+  //   mounted(){ 
+  //     this.getSubject()
+  //   },
   
-  // const error = ref(" ")
-  // const subjects = ref([])
-  // const router = useRouter()
-  // const teacher= reactive({
-  //   name:' ',
-  //   gender:' ',
-  //   subject:[]
-  // })
-
-  // onMounted(()=>{
-  //   getSubject()
-  // })
-
-  // const getSubject  =async ()=>{
-  //     let response = await axios.get(`/api/subjects`)
-  //     subjects.value = response.data
-  // }
-
-  // const addTeacher = async () =>{
-  //   error.value = "  "
-  //   try {
-  //     await axios.post(`/api/teachers`,teacher)
-  //     await router.push({name:'teachers'})
-  //   } 
-  //   catch (error) {
-  //     if(error.response.status === 422){
-  //       for(let key in error.response.data.error){
-  //         error.value = error.response.data.error
-  //       }
+  //   methods:{
+  //     getSubject(){
+  //           axios
+  //           .get('/api/subjects')
+  //           .then((res) => {
+  //             this.subjects = res.data
+  //           })
+  //           .catch(error => console.log(error))
+  //           .finally(()=>this.loading = false)
+  //     },
+      
+  //     addTeacher(){
+  //         axios 
+  //           .post(`/api/teachers`,this.teacher)
+  //           .then((res)=>{
+  //             console.log(res.data)
+  //             this.$router.push({name: 'teachers'})
+  //           })
+  //           .catch(error=>console.log(error))
+  //           .finally(()=>this.loading= false)
   //     }
   //   }
   // }

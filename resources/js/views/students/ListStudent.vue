@@ -46,7 +46,7 @@
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.id }}</td>
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.name }}</td>
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.gender }}</td>
-                              <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.classroom.name}}</td>    
+                              <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.classroom?.name}}</td>    
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.created_at }}</td>
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.updated_at }}</td>           
                               <td class="px-4 py-4  text-sm">
@@ -98,9 +98,7 @@
   import {onMounted } from 'vue';
   import {ref,reactive} from 'vue';
 import { useRouter } from 'vue-router';
-  // const student = reactive({
-  //   classroom:' '
-  // })
+
   const classrooms = ref([])
   const students = ref([])
   const router = useRouter()
@@ -108,17 +106,17 @@ import { useRouter } from 'vue-router';
 
   onMounted(()=>{
     getStudent()
-    
+    getClassroom()
   })
   const getStudent = async ()=>{
     let response =await axios.get(`/api/students`)
     students.value = response.data
   }
   
-  // const getClassroom = async ()=>{
-  //   let response = await axios.get(`/api/classes`)
-  //   classrooms.value = response.data
-  // }
+  const getClassroom = async ()=>{
+    let response = await axios.get(`/api/classes`)
+    classrooms.value = response.data.classrooms
+  }
 
   const deleteStudent = async (id)=>{
     errors.value='   '

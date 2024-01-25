@@ -62,48 +62,78 @@
       </form>
   </div>
   
-  
+   
 </template> 
+<script setup>
+import axios from 'axios';
+import {onMounted } from 'vue';
+import {ref,reactive} from 'vue';
+import {useRoute } from 'vue-router';
 
-<script>
 
-export default {
-  data(){
-    return{
-      student:{
-        name:'',
-        gender: '',
-        classroom:''
-      },
-      classrooms:[]
-    }
-  },
-  mounted(){ 
-      this.getClass()
-      this.getStudent()
-  },
-  methods:{
-    getClass(){
-        axios
-            .get(`/api/classes`)
-            .then(res=>{
-              this.classrooms = res.data
-            })
-            .catch(error=>console.log(error))
-            .finally(()=>this.loading= false)
-    },
-    getStudent(){
-        axios
-            .get(`/api/students/${this.$route.params.id}`)
-            .then(res=>{
-              this.student = res.data.data
-              console.log(res.data.data.classroom)
-              this.student.classroom = res.data.data.classroom.id
-            })
-            .catch(error=>console.log(error))
-            .finally(()=>this.loading= false)
-    },
-  },
+const route = useRoute()
+const student= reactive({
+    name: ' ',
+    gender:' ',
+    classroom:' '
+})
+
+const classrooms = ref([])
+onMounted(()=>{
+    getClassroom()
+    getStudent()
+})
+
+const getClassroom = async ()=>{
+    let res = await axios.get(`/api/classes`)
+    classrooms.value = res.data
 }
+
+const getStudent = async ()=>{
+    let res = await axios.get(`/api/students/${route.params.id}`)
+    student.name = res.data.data.name
+    student.gender = res.data.data.gender
+    student.classroom= res.data.data.classroom.id
+}
+
+
+// export default {
+//   data(){
+//     return{
+//       student:{
+//         name:'',
+//         gender: '',
+//         classroom:''
+//       },
+//       classrooms:[]
+//     }
+//   },
+//   mounted(){ 
+//       this.getClass()
+//       this.getStudent()
+//   },
+//   methods:{
+//     getClass(){
+//         axios
+//             .get(`/api/classes`)
+//             .then(res=>{
+//               this.classrooms = res.data
+//             })
+//             .catch(error=>console.log(error))
+//             .finally(()=>this.loading= false)
+//     },
+//     getStudent(){
+//         axios
+//             .get(`/api/students/${this.$route.params.id}`)
+//             .then(res=>{
+//               this.student = res.data.data
+//               console.log(res.data.data.classroom)
+//               this.student.classroom = res.data.data.classroom.id
+//             })
+//             .catch(error=>console.log(error))
+//             .finally(()=>this.loading= false)
+//     },
+//   },
+// }
 
 </script>

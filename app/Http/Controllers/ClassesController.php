@@ -33,12 +33,12 @@ class ClassesController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
         $grade = new Classes([
             'name'=> $request->input('name')
-        ]);
-        // $request->validate([
-        //     'name' => 'required|max:255',
-        // ]);
+        ]);  
         $grade->save();
         $grade->subjects()->sync([
             $request->subject => [ 'teacher_id' =>   $request->teacher],

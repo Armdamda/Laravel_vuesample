@@ -89,50 +89,42 @@
       </div>
 </template>
     
-<script >
-    export default {
-        data() {
-             return {
-                subjects: [],
-                teachers:[]
-            }
-        },
-        mounted() { 
-            this.getSubject()
-            this.getTeacher()
-        },
-        methods: {
+<script setup>
+import axios from 'axios';
+  import {ref, reactive }  from  'vue'
+  import {useRoute, useRouter} from 'vue-router'
+  import { onMounted } from 'vue'
+  
+  const router = useRouter()
+  const route = useRoute()
+  const subjects = ref([])
+  const teachers = ref([])
 
-          getTeacher(){
-              axios
-                    .get(`/api/teachers/${this.$route.params.id}`)
-                    .then((res)=>{
-                        console.log(res.data.data.subjects)
-                      this.subjects= res.data.data.subjects
-                    })
-                    .catch(error => console.log(error))
-                    .finally(()=> this.loading = false)
-          },
-            getSubject(){
-                  axios
-                    .get(`/api/subjects`)
-                    .then(response => this.subjects= response.data)
-                    .catch(error => console.log(error))
-                    .finally(()=> this.loading = false)
-            },
+  onMounted(()=>{
+    getTeacher()
+  
+  })
 
-            deleteSubject(id, index) {
-              axios
-                .delete('/api/subjects/'+id)
-                .then(() => {
-                  this.subject.data.splice(index,1);
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            }     
+  const getTeacher = async ()=>{
+    let res = await axios.get(`/api/teachers/${route.params.id}`)
+    subjects.value = res.data.data.subjects
+  }
+  const getSubject = async ()=>{
+    let res = await axios.get(`/api/subjects`)
+    subjects.value = res.data
+  }
 
-            
-        }   
-    }   
+  const deleteSubject = async (id)=>{
+    error.value='   '
+    try {
+      await axios.delete(`/api/teachers/${id}`)
+      await router.push({ name: 'teachers'})
+    } catch (error) {
+      if(error.response.status === 422){
+        for(const key in e.response.data.errors){
+          error.value = e.response.data.error
+        }
+      }
+    }
+  }
     </script>

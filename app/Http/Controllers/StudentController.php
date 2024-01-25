@@ -22,17 +22,15 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         //$students = Student::create($request->validated());
-    
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'gender' => 'required',
+        ]);
         $students = new Student([
             'name'=>$request->name,
             'gender'=>$request->gender,
             'class_id'=>$request->classroom
-        ]);
-            $request->validate([
-            'name' => 'required|string|max:255',
-            'gender' => 'required',
-            'class_id' => 'required'
-        ]);
+        ]);    
         $students->save();
         return response()->json('Students created!');
     }
@@ -49,19 +47,19 @@ class StudentController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request,  $id)
     { 
         $students = Student::with('classroom')->find($id);
         if ($students) {
             $students->update([
                 'name'=>$request->name,
-                'gender'=>$request->gender
+                'gender'=>$request->gender,
+                'class_id'=>$request->classroom,
             ]);
-            $request->validate([
-               ' name' => 'required|string|max:255',
-                 'gender' => 'required',
-                'class_id' => 'required'
-            ]);
+            // $request->validate([
+            //     ' name' => 'required|string|max:255',
+            //       'gender' => 'required',
+            //  ]);
             return response()->json([
                 'success' => true,
                 'message' => 'Student updated !',
@@ -74,7 +72,7 @@ class StudentController extends Controller
         ], 404);
     }
 
-    public function destroy(Student $students ,string $id)
+    public function destroy(Student $students , $id)
     {
         $students = Student::find($id);
         if ($students) {

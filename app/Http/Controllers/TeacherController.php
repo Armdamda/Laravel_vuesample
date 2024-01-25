@@ -21,10 +21,13 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
-        $teachers = new Teacher();
         $request->validate([
             'name' => 'required|max:255',
             'gender' => 'required'
+        ]);
+        $teachers = new Teacher([
+            'name' => $request->name,
+            'gender'=>$request->gender,
         ]);
         $teachers->save();
         $teachers->subjects()->attach($request->subject);
@@ -52,7 +55,10 @@ class TeacherController extends Controller
                 'name' => 'required|max:255',
                 'gender' => 'required'
             ]);
-            $teachers->update();
+            $teachers->update([
+                'name' => $request->name,
+                 'gender'=>$request->gender,
+            ]);
             $teachers->subjects()->sync($request->subject);
             return response()->json([
                 'success' => true,

@@ -92,54 +92,40 @@
       </div>
 </template>
     
-    <script >
+  <script setup>
+  import axios from 'axios';
+  import {onMounted } from 'vue';
+  import {ref} from 'vue';
   
-    export default {
-        data() {
-            return {
-                teachers: [],
-                subjects:[]
-            }
-        },
-        mounted() { 
-            this.getTeacher()
-            //this.getSubject()
-        },
-        methods: {
-            getTeacher() {
-                axios
-                  .get(` /api/teachers` )
-                  .then(response => {
-                    this.teachers = response.data
-                  })
-                  .catch(error => console.log(error))
-                  .finally(()=>this.loading =false)
-            },
+  const errors = ref(" ")
+  const teachers = ref([])
+  const subjects = ref([])
 
-            getSubject(){
-                axios
-                  .get(`/api/subjects`)
-                  .then(res => {
-                    this.subjects = res.data
-                  })
-                  .catch(error => console.log(error))
-                  .finally(()=>this.loading = false)
-            },
+  onMounted(()=>{
+    getTeacher()
+    getSubject()
+  })
+  const getTeacher = async () =>{
+    let res = await axios.get(`/api/teachers`)
+    teachers.value = res.data
+  }
 
-            teacherDelete(id, index) {
+  const getSubject = async () =>{
+    let res = await axios.get(`/api/subjects`)
+    subjects.value = res.data
+  }
 
-              if('Do you want to delete this items?'){
-                axios
-                .delete('/api/teachers/'+id)
-                .then(() => {
-                  this.teachers.data.splice(index,1);
-                })
-                .catch((error) => {
-                  console.log(error);
-                })
-                .finally(()=>this.loading = false)
-              }         
-            }        
-        } ,   
-    }   
+  const teacherDelete =async (id,index)=>{
+    errors.value = ' '
+    try {
+      await axios.delete(`/api/teachers/${id}`)
+      teachers.value.data.splice(index,1)
+    } catch (error) {
+      if(errors.response.status === 422){
+        for(const key in e.response.data.errors){
+          errors.value = e.response.data.errors
+        }
+    }
+  }
+}
  </script>

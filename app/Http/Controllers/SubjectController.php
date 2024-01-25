@@ -23,12 +23,11 @@ class SubjectController extends Controller
 
     public function store(Request $request)
     {
-      
-        $subjects = new Subject([
-            'name'=>$request->name
-        ]);
         $request->validate([
             'name'=>'require|string'
+        ]);
+        $subjects = new Subject([
+            'name'=>$request->name
         ]);
         $subjects->save();
         $subjects->teachers()->attach($request->teachers);
@@ -49,6 +48,9 @@ class SubjectController extends Controller
     {
         $subjects = Subject::find($id);
         if ($subjects) {
+            $request->validate([
+                'name'=> 'required|max:250|string'
+            ]);
             $subjects->update([
                 'name'=>$request->name
             ]);

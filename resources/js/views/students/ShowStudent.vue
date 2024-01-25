@@ -96,45 +96,4 @@ const getStudent = async () => {
     student.gender = res.data.data.gender
     student.classroom = res.data.data.classroom.id
 }
-
-
-// export default {
-//   data(){
-//     return{
-//       student:{
-//         name:'',
-//         gender: '',
-//         classroom:''
-//       },
-//       classrooms:[]
-//     }
-//   },
-//   mounted(){
-//       this.getClass()
-//       this.getStudent()
-//   },
-//   methods:{
-//     getClass(){
-//         axios
-//             .get(`/api/classes`)
-//             .then(res=>{
-//               this.classrooms = res.data
-//             })
-//             .catch(error=>console.log(error))
-//             .finally(()=>this.loading= false)
-//     },
-//     getStudent(){
-//         axios
-//             .get(`/api/students/${this.$route.params.id}`)
-//             .then(res=>{
-//               this.student = res.data.data
-//               console.log(res.data.data.classroom)
-//               this.student.classroom = res.data.data.classroom.id
-//             })
-//             .catch(error=>console.log(error))
-//             .finally(()=>this.loading= false)
-//     },
-//   },
-// }
-
 </script>

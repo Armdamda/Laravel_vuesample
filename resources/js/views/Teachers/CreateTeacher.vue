@@ -60,6 +60,45 @@
 </template> 
 
 <script>
+  export default {
+    data(){
+      return{
+        teacher:{
+          'name': '  ',
+          'gender': '  ',
+          subject: [],
+        },
+        subjects:[]
+      }
+    },
+    mounted(){ 
+      this.getSubject()
+    },
+  
+    methods:{
+      getSubject(){
+            axios
+            .get('/api/subjects')
+            .then((res) => {
+              this.subjects = res.data
+            })
+            .catch(error => console.log(error))
+            .finally(()=>this.loading = false)
+      },
+      
+      addTeacher(){
+          axios 
+            .post(`/api/teachers`,this.teacher)
+            .then((res)=>{
+              console.log(res.data)
+              this.$router.push({name: 'teachers'})
+            })
+            .catch(error=>console.log(error))
+            .finally(()=>this.loading= false)
+      }
+    }
+  }
+
   //   import axios from 'axios';
   // import {ref, reactive }  from  'vue'
   // import { useRouter} from 'vue-router'
@@ -97,43 +136,4 @@
   //     }
   //   }
   // }
-
-  export default {
-    data(){
-      return{
-        teacher:{
-          'name': '  ',
-          'gender': '  ',
-          subject: [],
-        },
-        subjects:[]
-      }
-    },
-    mounted(){ 
-      this.getSubject()
-    },
-  
-    methods:{
-      getSubject(){
-            axios
-            .get('/api/subjects')
-            .then((res) => {
-              this.subjects = res.data
-            })
-            .catch(error => console.log(error))
-            .finally(()=>this.loading = false)
-      },
-      
-      addTeacher(){
-          axios 
-            .post(`/api/teachers`,this.teacher)
-            .then((res)=>{
-              console.log(res.data)
-              this.$router.push({name: 'teachers'})
-            })
-            .catch(error=>console.log(error))
-            .finally(()=>this.loading= false)
-      }
-    },
-  }
   </script>

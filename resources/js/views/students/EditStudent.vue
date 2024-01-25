@@ -114,53 +114,48 @@
         }
     },
   }
-//     import axios from 'axios';
-//     import { ref, reactive} from 'vue'
-//     import { onMounted } from 'vue';
-//     import { useRouter } from 'vue-router';
+    import axios from 'axios';
+    import { ref, reactive} from 'vue'
+    import { onMounted } from 'vue';
+    import { useRouter } from 'vue-router';
     
-//     const errors = ref('')
-//     const router = useRouter()
-//     const students = ref([])
-//     const classrooms = ref([])
-//   	const student= reactive({
-//         name: ' ',
-//         gender:' ',
-//         classroom: ' '
-//     })
-//     const props = defineProps({
-//     id: {
-//         required: true,
-//         type: String
-//     }
-// })
-//     onMounted(()=>{
-//         getClassroom()
-//         getStudent()
-//     })
-//     const getClassroom = async () =>{
-//         let response = await axios.get(`/api/classes`)
-//         classrooms.value = response.data
-//     }
+    const errors = ref('')
+    const router = useRouter()
+    const students = ref([])
+    const classrooms = ref([])
+  	const student= reactive({
+        name: ' ',
+        gender:' ',
+        classroom: ' '
+    })
 
-//     const getStudent = async () =>  {
-//         let res =await axios.get(`/api/student/${props.id}`)
-//             student.name = res.data.name
-//             student.gender = res.data.gender
-//             student.classroom = res.data.classroom.id
-//     } 
+    onMounted(()=>{
+        getClassroom()
+        getStudent()
+    })
+    const getClassroom = async () =>{
+        let response = await axios.get(`/api/classes`)
+        classrooms.value = response.data
+    }
 
-//     const updatedStudent = async () =>{
-//         errors.value = ' '
-//         try {
-//             await axios.patch(`/api/students/${props.id}`,student)
-//             await router.push({name:'students'})
-//         } catch (e) {
-//             if(e.response.status === 422){
-//                 for(const key in e.response.data.errors){
-//                      errors.value = e.response.data.errors
-//                 }
-//             }
-//         }
-//     }
+    const getStudent = async () =>  {
+        let res =await axios.get(`/api/student/${props.id}`)
+            student.name = res.data.name
+            student.gender = res.data.gender
+            student.classroom = res.data.classroom.id
+    } 
+
+    const updateStudent = async (id) =>{
+        errors.value = ' '
+        try {
+            await axios.patch(`/api/students/${id}`,student)
+            await router.push({name:'students'})
+        } catch (e) {
+            if(e.response.status === 422){
+                for(const key in e.response.data.errors){
+                     errors.value = e.response.data.errors
+                }
+            }
+        }
+    }
 </script>

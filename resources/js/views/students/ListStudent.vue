@@ -46,7 +46,7 @@
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.id }}</td>
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.name }}</td>
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.gender }}</td>
-                              <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.classroom?.name}}</td>    
+                              <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.classroom.name}}</td>    
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.created_at }}</td>
                               <td class="px-4 py-4  text-sm text-gray-800 dark:text-gray-200">{{ student.updated_at }}</td>           
                               <td class="px-4 py-4  text-sm">

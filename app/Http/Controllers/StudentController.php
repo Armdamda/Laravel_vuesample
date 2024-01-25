@@ -21,7 +21,6 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        //$students = Student::create($request->validated());
         $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required',
@@ -56,10 +55,6 @@ class StudentController extends Controller
                 'gender'=>$request->gender,
                 'class_id'=>$request->classroom,
             ]);
-            // $request->validate([
-            //     ' name' => 'required|string|max:255',
-            //       'gender' => 'required',
-            //  ]);
             return response()->json([
                 'success' => true,
                 'message' => 'Student updated !',

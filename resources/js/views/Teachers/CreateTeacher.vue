@@ -1,5 +1,4 @@
 <template>
-
     <div class=" bg-gray-50 px-12 py-3 rounded-md m-auto w-[70%]">
       <h2 class="text-2xl font-medium mb-4">New Teacher</h2>
       <form @submit.prevent="createTeacher">
@@ -97,42 +96,4 @@
       }
     }
   }
-  // export default {
-  //   data(){
-  //     return{
-  //       teacher:{
-  //         'name': '  ',
-  //         'gender': '  ',
-  //         subject: [],
-  //       },
-  //       subjects:[]
-  //     }
-  //   },
-  //   mounted(){ 
-  //     this.getSubject()
-  //   },
-  
-  //   methods:{
-  //     getSubject(){
-  //           axios
-  //           .get('/api/subjects')
-  //           .then((res) => {
-  //             this.subjects = res.data
-  //           })
-  //           .catch(error => console.log(error))
-  //           .finally(()=>this.loading = false)
-  //     },
-      
-  //     addTeacher(){
-  //         axios 
-  //           .post(`/api/teachers`,this.teacher)
-  //           .then((res)=>{
-  //             console.log(res.data)
-  //             this.$router.push({name: 'teachers'})
-  //           })
-  //           .catch(error=>console.log(error))
-  //           .finally(()=>this.loading= false)
-  //     }
-  //   }
-  // }
   </script>

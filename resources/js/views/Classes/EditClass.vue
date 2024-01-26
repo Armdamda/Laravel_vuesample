@@ -89,114 +89,216 @@
     </form>
   </div>
 </template>
-<script>
+<script setup>
 import axios from 'axios';
+import {ref,reactive }  from  'vue'
+import { onMounted } from 'vue'
+import { useRoute,useRouter } from 'vue-router';
 
-export default {
-  data() {
-    return {
-      classroom: {
+const errors = ref(' ')
+const router = useRouter;
+const route = useRoute()
+const classroom = reactive({
         name: "",
         subject: "",
         subject1: "",
-        subject2:"" ,
-        teacher: '',
-        teacher1: '',
-        teacher2: '',    
-      },
-      classrooms:[],
-      subjects: [],
-      teachers:[],
-      teachers1:[],
-      teachers2:[],
-    };
-  },
+        subject2: "",
+        teacher: "",
+        teacher1: "",
+        teacher2: "",
+})
+const subjects =ref([])
+const teachers= ref([])
+const teachers1= ref([])
+const teachers2= ref([])
 
-  async mounted()
-   {
-    this.getSubject()
-    //this.getTeacher()
-    await this. getClassroom()
-     this. handleChange(this.classroom.subject)
-     this.handleChange1(this.classroom.subject1)
-     this.handleChange2(this.classroom.subject2)
-  },
+onMounted(()=>{
+  getSubject()
+  getClassroom()
+  handleChange(classroom.subject)
+  handleChange1(classroom.subject1)
+  handleChange2(classroom.subject2)
+})
 
-  methods: {
-    async getClassroom(){
-      await axios 
-            .get(`/api/classes/${this.$route.params.id}`)
-            .then((res)=>{
-              this.classroom.name = res.data.data.name,
-              this.classroom.subject = res.data.data.subjects[0].id
-              this.classroom.teacher = res.data.data.subjects[0].pivot.teacher_id
-              this.classroom.subject1 = res.data.data.subjects[1].id
-              this.classroom.teacher1 = res.data.data.subjects[1].pivot.teacher_id
-              this.classroom.subject2 = res.data.data.subjects[2].id
-              this.classroom.teacher2 = res.data.data.subjects[2].pivot.teacher_id
-            })
-            .catch((error) => console.log(error))
-            .finally(() => (this.loading = false));
-    },
-  async  getSubject() {
-      await  axios
-        .get(`/api/subjects`)
-        .then((res) => {
-          this.subjects = res.data
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
+const getClassroom = async ()=>{
+  let res = await axios.get(`/api/classes/${route.params.id}`)
+  classroom.name      = res.data.data.name
+  classroom.subject   = res.data.data.subjects[0].id
+  classroom.teacher   = res.data.data.subjects[0].pivot.teacher_id
+  classroom.subject1 = res.data.data.subjects[1].id
+  classroom.teacher1 = res.data.data.subjects[1].pivot.teacher_id
+  classroom.subject2 = res.data.data.subjects[2].id
+  classroom.teacher2 = res.data.data.subjects[2].pivot.teacher_id
+}
 
-  async  getTeacher(){
-       await   axios
-              .get(`/api/teachers/${this.$route.params.id}`)
-              .then((res)=>{
-                this.teachers= res.data
-              })
-              .catch(error=>console.log(error))
-              .finally(()=>this.loading= false)
-      },
+const getSubject = async ()=>{
+  let res = await axios.get(`/api/subjects`)
+  subjects.value = res.data
+}
 
-        handleChange(id) {
-              axios 
-                .get(`/api/subjects/${id}/teachers`)
-                .then((res) => {
-                 console.log(res.data)
-                  this.teachers=  res.data
-                })
-                .catch(error => console.log(error))
-                .finally(()=>this.loading = false) 
-    }, 
-      handleChange1(id) {
-              axios 
-                .get(`/api/subjects/${id}/teachers`)
-                .then((res) => {
-                  this.teachers1 =  res.data
-                })
-                .catch(error => console.log(error))
-                .finally(()=>this.loading = false) 
-    }, 
-     handleChange2(id) {
-              axios 
-                .get(`/api/subjects/${id}/teachers`)
-                .then((res) => {
-                  this.teachers2 =  res.data
-                })
-                .catch(error => console.log(error))
-                .finally(()=>this.loading = false) 
-    }, 
+const getTeacher = async(id)=>{
+  let res = await axios.get(`/api/teachers/${route.params.id}`)
+  teachers.value = res.data
+}
 
-    UpdateClass() {
-      axios
-        .put(`/api/classes/${this.$route.params.id}`, this.classroom)
-        .then((res) => {
-          this.$router.push({ name: "classes" });
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
+const handleChange=async (id)=>{
+  errors.value='  '
+  try {
+   let res= await axios.get(`/api/subjects/${id}/teachers`)
+    teachers.value =res.data
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+const handleChange1=async (id)=>{
+  errors.value='  '
+  try {
+   let res= await axios.get(`/api/subjects/${id}/teachers`)
+    teachers1.value =res.data
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+const handleChange2=async (id)=>{
+  errors.value='  '
+  try {
+   let res= await axios.get(`/api/subjects/${id}/teachers`)
+    teachers2.value =res.data
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+const UpdateClass =  async () =>{
+    errors.value = "  "
+    try {
+      await axios.put(`/api/classes/${route.params.id}`,classroom)
+      await router.push({name:'classes'})
+    } catch (error) {
+      if(error.res.status === 422){
+      for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+    }
+  }
+  
+// export default {
+//   data() {
+//     return {
+//       classroom: {
+//         name: "",
+//         subject: "",
+//         subject1: "",
+//         subject2:"" ,
+//         teacher: '',
+//         teacher1: '',
+//         teacher2: '',    
+//       },
+//       classrooms:[],
+//       subjects: [],
+//       teachers:[],
+//       teachers1:[],
+//       teachers2:[],
+//     };
+//   },
+
+//   async mounted()
+  //  {
+  //   this.getSubject()
+  //   //this.getTeacher()
+  //   await this. getClassroom()
+  //    this. handleChange(this.classroom.subject)
+  //    this.handleChange1(this.classroom.subject1)
+  //    this.handleChange2(this.classroom.subject2)
+  // }
+
+//   methods: {
+//     async getClassroom(){
+//       await axios 
+//             .get(`/api/classes/${this.$route.params.id}`)
+//             .then((res)=>{
+//               this.classroom.name = res.data.data.name,
+//               this.classroom.subject = res.data.data.subjects[0].id
+//               this.classroom.teacher = res.data.data.subjects[0].pivot.teacher_id
+//               this.classroom.subject1 = res.data.data.subjects[1].id
+//               this.classroom.teacher1 = res.data.data.subjects[1].pivot.teacher_id
+//               this.classroom.subject2 = res.data.data.subjects[2].id
+//               this.classroom.teacher2 = res.data.data.subjects[2].pivot.teacher_id
+//             })
+//             .catch((error) => console.log(error))
+//             .finally(() => (this.loading = false));
+//     },
+//   async  getSubject() {
+//       await  axios
+//         .get(`/api/subjects`)
+//         .then((res) => {
+//           this.subjects = res.data
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+
+//   async  getTeacher(){
+//        await   axios
+//               .get(`/api/teachers/${this.$route.params.id}`)
+//               .then((res)=>{
+//                 this.teachers= res.data
+//               })
+//               .catch(error=>console.log(error))
+//               .finally(()=>this.loading= false)
+//       },
+
+//         handleChange(id) {
+//               axios 
+//                 .get(`/api/subjects/${id}/teachers`)
+//                 .then((res) => {
+//                  console.log(res.data)
+//                   this.teachers=  res.data
+//                 })
+//                 .catch(error => console.log(error))
+//                 .finally(()=>this.loading = false) 
+//     }, 
+//       handleChange1(id) {
+//               axios 
+//                 .get(`/api/subjects/${id}/teachers`)
+//                 .then((res) => {
+//                   this.teachers1 =  res.data
+//                 })
+//                 .catch(error => console.log(error))
+//                 .finally(()=>this.loading = false) 
+//     }, 
+//      handleChange2(id) {
+//               axios 
+//                 .get(`/api/subjects/${id}/teachers`)
+//                 .then((res) => {
+//                   this.teachers2 =  res.data
+//                 })
+//                 .catch(error => console.log(error))
+//                 .finally(()=>this.loading = false) 
+//     }, 
+
+//     UpdateClass() {
+//       axios
+//         .put(`/api/classes/${this.$route.params.id}`, this.classroom)
+//         .then((res) => {
+//           this.$router.push({ name: "classes" });
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
      
-  },
-};
+//   },
+// };
 </script>

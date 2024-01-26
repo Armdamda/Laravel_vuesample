@@ -96,13 +96,16 @@
     </form>
   </div>
 </template>
-<script>
-import axios from "axios";
+<script setup>
+import axios from 'axios';
+import {ref,reactive }  from  'vue'
+import { onMounted } from 'vue'
+import { useRoute,useRouter } from 'vue-router';
 
-export default {
-  data() {
-    return {
-      classroom: {
+const errors = ref(' ')
+const router = useRouter;
+const route = useRoute()
+const classroom = reactive({
         name: "",
         subject: "",
         subject1: "",
@@ -110,78 +113,166 @@ export default {
         teacher: "",
         teacher1: "",
         teacher2: "",
-      },
+})
+const subjects =ref([])
+const teachers= ref([])
+const teachers1= ref([])
+const teachers2= ref([])
 
-      subjects: [],
-      teachers: [],
-      teachers1: [],
-      teachers2: [],
-    };
-  },
+onMounted(()=>{
+  getSubject()
+  getTeacher()
+})
 
-  mounted() {
-    this.getSubject();
-    //this.getTeacher()
-  },
+const getSubject = async ()=>{
+  let res = await axios.get(`/api/subjects`)
+  subjects.value = res.data
+}
 
-  methods: {
-    getSubject() {
-      axios
-        .get(`/api/subjects`)
-        .then((res) => {
-          this.subjects = res.data;
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
-    getTeacher() {
-      axios
-        .get(`/api/teachers`)
-        .then((res) => {
-          this.teachers = res.data;
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
-    handleChange() {
-      axios
-        .get(`/api/subjects/${this.classroom.subject}/teachers`)
-        .then((res) => {
-          this.teachers = res.data
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
-    handleChange1() {
-      axios
-        .get(`/api/subjects/${this.classroom.subject1}/teachers`)
-        .then((res) => {
-          this.teachers1 = res.data;
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
-    handleChange2() {
-      axios
-        .get(`/api/subjects/${this.classroom.subject2}/teachers`)
-        .then((res) => {
-          this.teachers2 = res.data;
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
+const getTeacher = async()=>{
+  let res = await axios.get(`/api/classes`)
+  teachers.value = res.data
+}
 
-    //add all data to table
-    addClass() {
-      axios
-        .post(`/api/classes`, this.classroom)
-        .then((res) => {
-          console.log(res.data);
-          this.$router.push({ name: "classes" });
-        })
-        .catch((error) => console.log(error))
-        .finally(() => (this.loading = false));
-    },
-  },
-};
+const handleChange=async ()=>{
+  errors.value='  '
+  try {
+   let res= await axios.get(`/api/subjects/${classroom.subject}/teachers`)
+    teachers.value =res.data
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+
+const handleChange1=async ()=>{
+  errors.value='  '
+  try {
+   let res= await axios.get(`/api/subjects/${classroom.subject1}/teachers`)
+    teachers1.value =res.data
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+
+const handleChange2=async ()=>{
+  errors.value='  '
+  try {
+   let res= await axios.get(`/api/subjects/${classroom.subject2}/teachers`)
+    teachers2.value =res.data
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+
+const addClass = async () =>{
+  errors.value = "  "
+  try {
+  let res = await axios.post(`/api/classes`,classroom);
+    await router.push({name: ' classes'})
+  } catch (error) {
+    if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+  }
+}
+
+// export default {
+//   data() {
+//     return {
+//       classroom: {
+//         name: "",
+//         subject: "",
+//         subject1: "",
+//         subject2: "",
+//         teacher: "",
+//         teacher1: "",
+//         teacher2: "",
+//       },
+
+//       subjects: [],
+//       teachers: [],
+//       teachers1: [],
+//       teachers2: [],
+//     };
+//   },
+
+//   mounted() {
+//     this.getSubject();
+//     //this.getTeacher()
+//   },
+
+//   methods: {
+//     getSubject() {
+//       axios
+//         .get(`/api/subjects`)
+//         .then((res) => {
+//           this.subjects = res.data;
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+//     getTeacher() {
+//       axios
+//         .get(`/api/teachers`)
+//         .then((res) => {
+//           this.teachers = res.data;
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+//     handleChange() {
+//       axios
+//         .get(`/api/subjects/${this.classroom.subject}/teachers`)
+//         .then((res) => {
+//           this.teachers = res.data
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+//     handleChange1() {
+//       axios
+//         .get(`/api/subjects/${this.classroom.subject1}/teachers`)
+//         .then((res) => {
+//           this.teachers1 = res.data;
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+//     handleChange2() {
+//       axios
+//         .get(`/api/subjects/${this.classroom.subject2}/teachers`)
+//         .then((res) => {
+//           this.teachers2 = res.data;
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+
+//     //add all data to table
+//     addClass() {
+//       axios
+//         .post(`/api/classes`, this.classroom)
+//         .then((res) => {
+//           console.log(res.data);
+//           this.$router.push({ name: "classes" });
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => (this.loading = false));
+//     },
+//   },
+// };
 </script>

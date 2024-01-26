@@ -184,89 +184,143 @@
   </div>
 </template>
   
-<script >
+<script setup>
 import { RouterLink } from 'vue-router';
 import axios from 'axios';
-export default {
-  data() {
-    return {
-      classroom: {
-        // students: [],
-        // subjects: []
-      },
-      classrooms: [],
-      teachers: [],
-      students: [],
-      subjects: []
+import {ref,reactive }  from  'vue'
+import { onMounted } from 'vue'
+import { useRoute,useRouter } from 'vue-router';
 
+const errors = ref(' ')
+const router = useRouter;
+const route = useRoute()
+const classroom = reactive({
+
+})
+const classrooms =ref([])
+const subjects =ref([])
+const teachers= ref([])
+const students = ref([])
+
+onMounted(()=>{
+  getClassroom()
+  getSubject()
+  getTeacher()
+})
+
+const getClassroom = async () =>{
+ let res = await axios.get(`/api/classes/${route.params.id}`)
+ subjects.value = res.data.data.subjects
+ teachers.value = res.data.data.teachers
+ teachers.value = res.data.data?.subjects[0].pivot.teacher_id;
+//  subjects.teachers = res.data.data.teachers
+//  console.log(res.data.data?.subjects[0].pivot.teacher_id)
+//  console.log(res.data.data.subjects.pivot)
+}
+const getSubject = async () =>{
+ let res = await axios.get(`/api/subjects`)
+ subjects.value = res.data
+}
+
+const getTeacher = async () =>{
+ let res = await axios.get(`/api/teachers`)
+ teachers.value = res.data
+}
+
+const studentDelete = async (index,id) =>{
+  errors.value = " "
+try {
+  await axios.delete(`/api/classes/${id}`)
+  await students.data.splice(index,1)
+} catch (error) {
+  if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
     }
-  },
-  mounted() {
-    //this.getStudent()
-    this.getClassroom()
-    this.getTeacher()
-    //this.getSubject()
-  },
-  methods: {
+  }
+}
+}
 
-    async getClassroom() {
-      await axios
-        .get(`/api/classes/${this.$route.params.id}`)
-        .then((res) => {
-         this.subjects = res.data.data.subjects,
-         this.teachers = res.data.data.teachers
-         // this.subjects.teachers= res.data.data.teachers
-          // console.log(  res.data.data?.subjects[0].pivot.teacher_id)
-          //this.subjects = res.data.data.subjects.pivot
+// export default {
+//   data() {
+//     return {
+//       classroom: {
+//         // students: [],
+//         // subjects: []
+//       },
+//       classrooms: [],
+//       teachers: [],
+//       students: [],
+//       subjects: []
+
+//     }
+//   },
+//   mounted() {
+//     //this.getStudent()
+//     this.getClassroom()
+//     this.getTeacher()
+//     //this.getSubject()
+//   },
+//   methods: {
+
+//     async getClassroom() {
+//       await axios
+//         .get(`/api/classes/${this.$route.params.id}`)
+//         .then((res) => {
+//         this.subjects = res.data.data.subjects
+//          this.teachers = res.data.data.teachers
+//          // this.subjects.teachers= res.data.data.teachers
+//           // console.log(  res.data.data?.subjects[0].pivot.teacher_id)
+//           this.teachers.subjects = res.data.data?.subjects[0].pivot.teacher_id
         
-        })
-        .catch(error => console.log(error))
-        .finally(() => this.loading = false)
-    },
+//         })
+//         .catch(error => console.log(error))
+//         .finally(() => this.loading = false)
+//     },
 
-    async getStudent() {
-      await axios
-        .get(`/api/students/${this.$route.params.id}`)
-        .then((response) => {
-          this.students = response.data
-        })
-        .catch(error => console.log(error))
-        .finally(() => this.loading = false)
-    },
+//     async getStudent() {
+//       await axios
+//         .get(`/api/students/${this.$route.params.id}`)
+//         .then((response) => {
+//           this.students = response.data
+//         })
+//         .catch(error => console.log(error))
+//         .finally(() => this.loading = false)
+//     },
 
-    async getTeacher() {
-      await axios
-        .get(`/api/teachers`)
-        .then((res) => {
-          this.teachers = res.data.data
-        })
-        .catch(error => console.log(error))
-        .finally(() => this.loading = false)
-    },
-    async getSubject() {
-      await axios
-        .get(`/api/subjects`)
-        .then((res) => {
-          this.subjects = res.data
+//     async getTeacher() {
+//       await axios
+//         .get(`/api/teachers`)
+//         .then((res) => {
+//           this.teachers = res.data.data
+//         })
+//         .catch(error => console.log(error))
+//         .finally(() => this.loading = false)
+//     },
+//     async getSubject() {
+//       await axios
+//         .get(`/api/subjects`)
+//         .then((res) => {
+//           this.subjects = res.data
 
-        })
-        .catch((error) => console.log(error))
-        .finally(() => this.loading = false)
-    },
+//         })
+//         .catch((error) => console.log(error))
+//         .finally(() => this.loading = false)
+//     },
 
-    async studentDelete(id, index) {
-      await axios
-        .delete('/api/students/' + id)
-        .then(() => {
-          this.students.data.splice(index, 1);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => this.loading = false)
-    }
-  },
-}   
+//     async studentDelete(id, index) {
+//       await axios
+//         .delete('/api/students/' + id)
+//         .then(() => {
+//           this.students.data.splice(index, 1);
+//         })
+//         .catch((error) => {
+//           console.log(error);
+//         })
+//         .finally(() => this.loading = false)
+//     }
+//   },
+// }   
 </script>
 
 

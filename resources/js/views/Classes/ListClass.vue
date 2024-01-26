@@ -89,48 +89,36 @@
       </div>
 </template>
     
-<script >
-    export default {
-        data() {
-             return {
-                grade: [],
-                students:[]
-            }
-        },
-        mounted() { 
-            this.createPosts()
-            this.getStudent()
-        },
-        methods: {
-            createPosts() {
-                axios
-                  .get(`/api/classes`)
-                  .then((response) => {
-                    this.grade = response.data
-                  })
-                  .catch(error => console.log(error))
-                  .finally(()=>this.loading = false)
-            },
+<script setup>
+import axios from 'axios';
+import {ref }  from  'vue'
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router';
 
-            getStudent(){
-                  axios
-                    .get(`api/students`)
-                    .then(response => this.students = response.data)
-                    .catch(error => console.log(error))
-                    .finally(()=> this.loading = false)
-            },
+const errors = ref(" ")
+const route = useRoute()
+const grade=ref([])
 
-            classDelete(id, index) {
-              axios
-                .delete('/api/classes/'+id)
-                .then(() => {
-                  this.grade.data.splice(index,1);
-                })
-                .catch((error) => {
-                  console.log(error);
-                })
-                .finally(()=>this.loading = false)
-            }           
-        }   
-    }   
-    </script>
+onMounted(()=>{
+  getClassroom()
+})
+
+const getClassroom = async () =>{
+  let res = await axios.get(`/api/classes`)
+  grade.value = res.data
+}
+
+const classDelete = async (index,id) =>{
+  errors.value = " "
+try {
+  await axios.delete(`/api/classes/${id}`)
+  await grade.data.splice(index,1)
+} catch (error) {
+  if(error.res.status === 422){
+    for(const key in error.res.data.errors){
+      errors.value = error.res.data.errors
+    }
+  }
+}
+}
+</script>

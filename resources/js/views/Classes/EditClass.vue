@@ -90,6 +90,7 @@
   </div>
 </template>
 <script setup>
+//Convet from Option API to composition API
 import axios from 'axios';
 import {ref,reactive }  from  'vue'
 import { onMounted } from 'vue'
@@ -129,6 +130,7 @@ const getClassroom = async ()=>{
   classroom.teacher1 = res.data.data.subjects[1].pivot.teacher_id
   classroom.subject2 = res.data.data.subjects[2].id
   classroom.teacher2 = res.data.data.subjects[2].pivot.teacher_id
+  
 }
 
 const getSubject = async ()=>{
@@ -193,7 +195,7 @@ const UpdateClass =  async () =>{
   }
     }
   }
-  
+
 // export default {
 //   data() {
 //     return {

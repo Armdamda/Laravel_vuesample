@@ -11,7 +11,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//apiresource(index,store,update,destroy)
+
 
 Route::apiResource('classes',ClassesController::class);
 Route::get('subjects/{id}/teachers', [ClassesController::class, 'subjectTeachers']);

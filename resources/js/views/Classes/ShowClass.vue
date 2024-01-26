@@ -212,7 +212,7 @@ const getClassroom = async () =>{
  let res = await axios.get(`/api/classes/${route.params.id}`)
  subjects.value = res.data.data.subjects
  teachers.value = res.data.data.teachers
- teachers.value = res.data.data?.subjects[0].pivot.teacher_id;
+teachers.value = res.data.data?.subjects[0].pivot.teacher_id;
 //  subjects.teachers = res.data.data.teachers
 //  console.log(res.data.data?.subjects[0].pivot.teacher_id)
 //  console.log(res.data.data.subjects.pivot)

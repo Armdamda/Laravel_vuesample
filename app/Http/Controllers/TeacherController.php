@@ -21,6 +21,7 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
+        $teachers = new Teacher();
         $request->validate([
             'name' => 'required|max:255',
             'gender' => 'required'
@@ -66,10 +67,12 @@ class TeacherController extends Controller
                 'data' => $teachers
             ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'Teacher not found'
-        ], 404);
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Teacher not found'
+            ], 404);
+        }
     }
     public function destroy(Request $request, string $id)
     {
@@ -82,9 +85,11 @@ class TeacherController extends Controller
                 'message' => 'Teacher has deleted!'
             ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'Teacher not found'
-        ], 404);
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Teacher not found'
+            ], 404);
+        }
     }
 }

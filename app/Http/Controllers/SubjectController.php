@@ -12,7 +12,12 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Subject::with('teachers')->get();
-        return response()->json($subjects);
+        // return response()->json($subjects);
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail data Teacher',
+            'data' => $subjects
+        ], 200);
     }
 
     public function getTeacher()
@@ -31,7 +36,12 @@ class SubjectController extends Controller
         ]);
         $subjects->save();
         $subjects->teachers()->attach($request->teachers);
-        return response()->json('Subject created!');
+        //return response()->json('');
+        return response()->json([
+            'success' => true,
+            'message' => 'Subject created!',
+            'data' => $subjects
+        ], 200);
     }
 
     public function show(string $id)

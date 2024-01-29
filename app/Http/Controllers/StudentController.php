@@ -62,10 +62,12 @@ class StudentController extends Controller
                 'data' => $students
             ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'student not found'
-        ], 404);
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'student not found'
+            ], 404);
+        }
     }
 
     public function destroy(Student $students, $id)
@@ -79,9 +81,11 @@ class StudentController extends Controller
                 'message' => 'students deleted'
             ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'students not found'
-        ], 404);
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'students not found'
+            ], 404);
+        }
     }
 }

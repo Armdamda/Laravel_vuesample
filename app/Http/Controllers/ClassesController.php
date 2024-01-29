@@ -68,9 +68,6 @@ class ClassesController extends Controller
         // $grade = Classes::find($id)->teachers()->get();
          $grade = Classes::with('subjects')->find($id);
         if ($grade) {
-            // $request->validate([
-            //     'name'=>'required|max:250'
-            // ]);
             $grade->update();
             $grade->subjects()->sync([
                 $request->subject =>   [ 'teacher_id' => $request->teacher],
@@ -83,10 +80,12 @@ class ClassesController extends Controller
                 'data' => $grade
             ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'student not found'
-        ], 404);
+        else{
+            return response()->json([
+                'success' => false,
+                'message' => 'student not found'
+            ], 404);
+        }
     }
 
     public function destroy(string $id)
@@ -99,16 +98,17 @@ class ClassesController extends Controller
                 'message'=>'Deleted succesfuly!'
             ],200);
         }
-        return response()->json([
-            'success'=> false,
-            'message'=>'Class not found!'
-        ],400);
+        else{
+            return response()->json([
+                'success'=> false,
+                'message'=>'Class not found!'
+            ],400);
+        }
     }
-  
+   //new route that use for store data between subject and classes
     public function  subjectTeachers(string $id) 
     {
         $teachers = Subject::find($id)->teachers()->get();
-        //$subjects = Subject::with('teachers')->find($id);
         return response()->json($teachers);
     }
 }

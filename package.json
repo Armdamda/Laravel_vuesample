@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@fortawesome/vue-fontawesome": "^3.0.5",
+        "primevue": "^3.47.2",
         "vue": "^3.4.3",
         "vue-router": "^4.2.5"
     }
